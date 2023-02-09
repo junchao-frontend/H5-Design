@@ -1,14 +1,18 @@
-import Vue from "vue"
-import VueRouter from "vue-router"
-import Layout from "@/layout"
+import Vue from "vue";
+import VueRouter from "vue-router";
+import Layout from "@/layout";
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 const routes = [
   {
     path: "/drug",
     component: () => import("../components/infoCard.vue"),
     // hidden: true,
+  },
+  {
+    path: '/login',
+    component: () => import("../views/login/index.vue")
   },
   {
     path: "/",
@@ -27,12 +31,12 @@ const routes = [
     ],
   },
 
-]
+];
 
 const router = new VueRouter({
   mode: 'hash',
   routes,
-})
+});
 
 // router.beforeEach(async (to, from, next) => {
 //   const protoken = localStorage.getItem('token')
@@ -54,4 +58,4 @@ const router = new VueRouter({
 //   }
 
 // })
-export default router
+export default router;
