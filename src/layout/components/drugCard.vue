@@ -275,7 +275,9 @@ export default {
     },
     //提交求助信息表单
     onSubmitDrug (values) {
+      let userId = sessionStorage.getItem('userId');
       let time = new Date();
+      this.drugForm.userId = userId;
       //isSolve 是否解决了这个求助信息
       this.drugForm.isSolve = false;
       // isEamine 后台是否审核通过了这个求助

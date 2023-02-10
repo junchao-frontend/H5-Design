@@ -47,7 +47,9 @@ export default {
       this.reload++;
     },
     initData () {
-      showHelp().then(res => {
+      let userId = sessionStorage.getItem('userId');
+      showHelp(userId).then(res => {
+        // console.log(res);
         if (res.data.code == 200) {
           var drugData = res.data.data;
           drugData.forEach(item => {
@@ -57,7 +59,7 @@ export default {
           this.helpInfoArr = drugData;
         }
       }).catch(error => {
-        console.error(error);
+        Promise.reject(error);
       });
     }
   }

@@ -4,7 +4,7 @@ import request from '../utils/request';
 export const addNeedInfo = data => {
   return request({
     method: 'post',
-    url: '/api/create/needDrug',
+    url: '/create/needDrug',
     // data用来设置POST请求体
     data
   });
@@ -13,17 +13,16 @@ export const addNeedInfo = data => {
 export const editHelpInfo = data => {
   return request({
     method: 'put',
-    url: '/api/edit/needDrug',
+    url: '/edit/needDrug',
     // data用来设置POST请求体
     data
   });
 };
 //展示求助信息
-export const showHelp = params => {
+export const showHelp = userId => {
   return request({
     method: 'get',
-    url: '/api/drug/showHelp',
-    params
+    url: `/drug/showHelp/${userId}`,
   });
 };
 

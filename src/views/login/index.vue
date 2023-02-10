@@ -3,19 +3,26 @@
     <div class="login-wrapper">
       <div class="header">Login</div>
       <div class="form-wrapper">
-        <input
-          type="text"
-          name="account"
-          placeholder="account"
-          class="input-item"
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="password"
-          class="input-item"
-        />
-        <div class="btn">Login</div>
+        <van-form @submit="onSubmit" v-model="userInfo">
+          <van-field
+            v-model="userInfo.account"
+            name="用户名"
+            placeholder="account"
+            :rules="[{ required: true, message: '请填写用户名' }]"
+          />
+          <van-field
+            v-model="userInfo.password"
+            type="password"
+            name="密码"
+            placeholder="password"
+            :rules="[{ required: true, message: '请填写密码' }]"
+          />
+          <div style="margin: 15px">
+            <van-button round block type="info" native-type="submit" class="btn"
+              >Login</van-button
+            >
+          </div>
+        </van-form>
       </div>
       <div class="msg">
         Don't have account?
@@ -32,12 +39,13 @@
       position="right"
       :style="{ width: '100%', height: ' 100%' }"
     >
-      <register />
+      <register @closePopup="closePopup" />
     </van-popup>
   </div>
 </template>
 
 <script>
+import { toLogin } from '@/api/user';
 import register from './register.vue';
 export default {
   components: {
@@ -45,7 +53,11 @@ export default {
   },
   data () {
     return {
-      registShow: false
+      registShow: false,
+      userInfo: {
+        account: '',
+        password: ''
+      }
     };
   },
   computed: {},
@@ -55,7 +67,34 @@ export default {
     register () {
       // console.log(1);
       this.registShow = true;
-    }
+    },
+    closePopup () {
+      console.log(1);
+      this.registShow = false;
+    },
+    onSubmit () {
+      let data = {
+        account: this.userInfo.account,
+        password: this.userInfo.password
+      };
+      toLogin(data).then(res => {
+        if (res.data.code !== 200) {
+          Promise.reject(res.data.message);
+        } else {
+          console.log(res.data);
+          this.$toast.success('登陆成功');
+          let userId = res.data.data.id;
+          let token = res.data.data.token;
+          let userInfo = res.data.data.userInfo;
+          sessionStorage.setItem('userId', userId);
+          sessionStorage.setItem('token', token);
+          sessionStorage.setItem('userInfo', JSON.stringify(userInfo));
+          setTimeout(() => {
+            this.$router.push('/');
+          });
+        }
+      });
+    },
   }
 }
 </script>
@@ -107,6 +146,7 @@ export default {
   margin-top: 40px;
   background-image: linear-gradient(to right, #a6c1ee, #fbc2eb);
   color: #fff;
+  border: none;
 }
 
 .msg {

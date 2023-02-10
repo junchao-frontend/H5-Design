@@ -1,7 +1,9 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Layout from "@/layout";
+import { Toast } from 'vant';
 
+Vue.use(Toast);
 Vue.use(VueRouter);
 
 const routes = [
@@ -38,24 +40,19 @@ const router = new VueRouter({
   routes,
 });
 
-// router.beforeEach(async (to, from, next) => {
-//   const protoken = localStorage.getItem('token')
-//   const envtoken = localStorage.getItem('env-token')
-//   const role = localStorage.getItem('role')
-//   const userInfo = localStorage.getItem('userInfo')
-//   if ((protoken || envtoken) && role && userInfo) {
-//     if (to.path === "/login") {
-//       next({ path: "/" })
-//     } else {
-//       next()
-//     }
-//   } else {
-//     if (to.path !== "/login") {
-//       next({ path: "/login" })
-//     } else {
-//       next()
-//     }
-//   }
-
-// })
+router.beforeEach(async (to, from, next) => {
+  const token = sessionStorage.getItem('token');
+  // const userId = sessionStorage.getItem('userId');
+  // console.log(to);
+  if (to.path == '/login') {
+    next();
+  } else {
+    if (!token) {
+      Toast.fail('请先登陆！');
+      next('/login');
+    } else {
+      next();
+    }
+  }
+});
 export default router;

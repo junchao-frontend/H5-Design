@@ -1,41 +1,75 @@
 <template>
   <div class="register-container">
     <div class="login-wrapper">
-      <div class="header">Login</div>
+      <div class="header">Register</div>
       <div class="form-wrapper">
-        <input
-          type="text"
-          name="account"
-          placeholder="account"
-          class="input-item"
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="password"
-          class="input-item"
-        />
-        <div class="btn">Login</div>
-      </div>
-      <div class="msg">
-        Don't have account?
-        <a @click="register()">Sign up</a>
+        <van-form @submit="onSubmit" v-model="userInfo">
+          <van-field
+            v-model="userInfo.account"
+            name="account"
+            placeholder="account"
+            :rules="[{ required: true, message: '请填写用户名' }]"
+          />
+          <van-field
+            v-model="userInfo.phone"
+            name="phone"
+            placeholder="phone"
+            :rules="[{ required: true, message: '请填写手机号' }]"
+          />
+          <van-field
+            v-model="userInfo.password"
+            type="password"
+            name="password"
+            placeholder="password"
+            :rules="[{ required: true, message: '请填写密码' }]"
+          />
+          <div style="margin: 15px">
+            <van-button round block type="info" native-type="submit" class="btn"
+              >注册</van-button
+            >
+          </div>
+        </van-form>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { registerUser } from '../../api/user';
 export default {
   components: {},
   data () {
     return {
+      userInfo: {
+        account: '',
+        phone: '',
+        password: ''
+      }
     };
   },
   computed: {},
   created () { },
   mounted () { },
-  methods: {}
+  methods: {
+    onSubmit () {
+      let data = this.userInfo;
+      // console.log(data);
+      registerUser(data).then(res => {
+        console.log(res);
+        if (res.data.code !== 200) {
+          Promise.reject(res.data.message);
+        } else {
+          this.$toast.success('注册成功');
+          this.userInfo = {
+            account: '',
+            phone: '',
+            password: ''
+          };
+          this.$emit('closePopup');
+        }
+      });
+    },
+  }
 }
 </script>
 
@@ -86,6 +120,7 @@ export default {
   margin-top: 40px;
   background-image: linear-gradient(to right, #a6c1ee, #fbc2eb);
   color: #fff;
+  border: none;
 }
 
 .msg {

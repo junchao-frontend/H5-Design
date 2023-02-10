@@ -81,6 +81,7 @@
     </van-popup>
     <van-popup
       closeable
+      close-icon="arrow-left"
       close-icon-position="top-left"
       class="close-sheet"
       get-container="body"
